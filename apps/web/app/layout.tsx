@@ -4,8 +4,8 @@ import type { ReactNode } from 'react';
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: 'DocPilot',
-  description: 'DocPilot web application',
+  title: 'DocPilot Source Analyzer',
+  description: 'Extract structured API route data from Express source code.',
 };
 
 type RootLayoutProps = Readonly<{

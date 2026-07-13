@@ -1,11 +1,33 @@
+import cors from 'cors';
 import express from 'express';
 import type { ErrorRequestHandler } from 'express';
 
 import { analyzeSource, sendError } from './analyze-source.js';
 
-export function createApp() {
-  const app = express();
+const defaultWebOrigin = 'http://localhost:3000';
 
+export interface CreateAppOptions {
+  webOrigin?: string;
+}
+
+export function createApp(options: CreateAppOptions = {}) {
+  const app = express();
+  const webOrigin = normalizeWebOrigin(
+    options.webOrigin ?? process.env.WEB_ORIGIN,
+  );
+
+  app.use(
+    cors({
+      origin(requestOrigin, callback) {
+        callback(
+          null,
+          requestOrigin === undefined || requestOrigin === webOrigin,
+        );
+      },
+      methods: ['GET', 'POST', 'OPTIONS'],
+      allowedHeaders: ['Content-Type'],
+    }),
+  );
   app.use(express.json());
 
   app.get('/health', (_request, response) => {
@@ -40,6 +62,12 @@ export function createApp() {
   app.use(errorHandler);
 
   return app;
+}
+
+function normalizeWebOrigin(value: string | undefined): string {
+  const origin = value?.trim().replace(/\/+$/, '');
+
+  return origin || defaultWebOrigin;
 }
 
 function isMalformedJsonError(error: unknown): boolean {

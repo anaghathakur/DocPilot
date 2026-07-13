@@ -1,41 +1,74 @@
 # DocPilot
 
-DocPilot is an early-stage platform for generating API documentation from GitHub repositories. The MVP will support repositories containing Node.js and Express applications.
+DocPilot analyzes Node.js and TypeScript Express source code and returns structured API route information. The current playground lets you paste route code, call the DocPilot API, and review extracted methods, paths, middleware, and handlers.
 
-This repository currently contains only the project foundation. It does not include repository parsing, documentation generation, AI integration, authentication, persistence, or product UI.
+The project does not include GitHub repository input, repository cloning, AI, authentication, persistence, or payments.
 
 ## Workspace structure
 
     apps/
-      api/       Minimal Express API service
-      web/       Minimal Next.js application
+      api/       Express API and source-analysis endpoint
+      web/       Next.js Source Analyzer Playground
     packages/
-      parser/    Reusable TypeScript parser package (empty foundation)
+      parser/    AST-based Express route extraction library
 
 The repository uses pnpm workspaces. TypeScript, ESLint, and Prettier configuration is shared from the workspace root.
 
 ## Prerequisites
 
-- Node.js 20.9 or newer
+- Node.js 20.19 or newer
 - pnpm 11
 
 ## Install
 
     pnpm install
 
-## Run locally
+## Environment setup
 
-Start the web application at http://localhost:3000:
+The defaults work for local development. Copy the example files if you want explicit local configuration.
 
-    pnpm dev:web
+PowerShell:
 
-Start the API at http://localhost:4000:
+    Copy-Item apps/api/.env.example apps/api/.env
+    Copy-Item apps/web/.env.example apps/web/.env.local
+
+macOS or Linux:
+
+    cp apps/api/.env.example apps/api/.env
+    cp apps/web/.env.example apps/web/.env.local
+
+API variables:
+
+- PORT defaults to 4000.
+- WEB_ORIGIN defaults to http://localhost:3000 and controls the browser origin allowed by CORS.
+
+Web variables:
+
+- NEXT_PUBLIC_API_BASE_URL defaults to http://localhost:4000.
+
+Restart a development server after changing its environment file.
+
+## Run the complete workflow
+
+Start the API in the first terminal:
 
     pnpm dev:api
 
-Verify the API with GET http://localhost:4000/health.
+Start the web application in a second terminal:
 
-## Quality commands
+    pnpm dev:web
+
+Open http://localhost:3000, edit the prefilled Express example, and select **Analyze source**. The browser sends the code to POST http://localhost:4000/analyze/source and displays the extracted routes.
+
+The API health check remains available at GET http://localhost:4000/health.
+
+## Tests and quality checks
+
+Run every workspace test suite:
+
+    pnpm -r --if-present test
+
+Run the shared quality checks:
 
     pnpm lint
     pnpm typecheck

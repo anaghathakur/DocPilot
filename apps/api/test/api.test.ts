@@ -119,3 +119,35 @@ describe('DocPilot API', () => {
     expect(response.body.error).not.toHaveProperty('stack');
   });
 });
+
+describe('CORS', () => {
+  const allowedOrigin = 'https://docpilot.example';
+  const corsApp = createApp({
+    webOrigin: allowedOrigin + '/',
+  });
+
+  it('allows the configured web origin', async () => {
+    const response = await request(corsApp)
+      .get('/health')
+      .set('Origin', allowedOrigin);
+
+    expect(response.status).toBe(200);
+    expect(response.headers['access-control-allow-origin']).toBe(allowedOrigin);
+  });
+
+  it('allows requests without an Origin header', async () => {
+    const response = await request(corsApp).get('/health');
+
+    expect(response.status).toBe(200);
+    expect(response.body.status).toBe('ok');
+  });
+
+  it('does not grant CORS permission to another browser origin', async () => {
+    const response = await request(corsApp)
+      .get('/health')
+      .set('Origin', 'https://untrusted.example');
+
+    expect(response.status).toBe(200);
+    expect(response.headers).not.toHaveProperty('access-control-allow-origin');
+  });
+});
