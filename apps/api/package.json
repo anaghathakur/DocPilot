@@ -5,16 +5,24 @@
   "type": "module",
   "scripts": {
     "build": "tsc --project tsconfig.json",
+    "predev": "pnpm --filter @docpilot/parser build",
     "dev": "tsx watch src/index.ts",
     "start": "node dist/index.js",
-    "typecheck": "tsc --project tsconfig.json --noEmit"
+    "pretest": "pnpm --filter @docpilot/parser build",
+    "test": "vitest run",
+    "pretypecheck": "pnpm --filter @docpilot/parser build",
+    "typecheck": "tsc --project tsconfig.json --noEmit && tsc --project tsconfig.test.json --noEmit"
   },
   "dependencies": {
+    "@docpilot/parser": "workspace:*",
     "express": "^5.2.1"
   },
   "devDependencies": {
     "@types/express": "^5.0.6",
     "@types/node": "^26.1.1",
-    "tsx": "^4.23.0"
+    "@types/supertest": "^7.2.0",
+    "supertest": "^7.2.2",
+    "tsx": "^4.23.0",
+    "vitest": "^4.1.10"
   }
 }
