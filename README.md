@@ -1,14 +1,14 @@
 # DocPilot
 
-DocPilot analyzes Node.js and TypeScript Express source code and returns structured API route information. The current playground lets you paste route code, call the DocPilot API, and review extracted methods, paths, middleware, and handlers.
+DocPilot analyzes Node.js and TypeScript Express source code and returns structured API route information. The playground supports both pasted source code and multiple browser-selected project files.
 
 The project does not include GitHub repository input, repository cloning, AI, authentication, persistence, or payments.
 
 ## Workspace structure
 
     apps/
-      api/       Express API and source-analysis endpoint
-      web/       Next.js Source Analyzer Playground
+      api/       Express API and source-analysis endpoints
+      web/       Next.js Source and Project Analyzer Playground
     packages/
       parser/    AST-based Express route extraction library
 
@@ -58,7 +58,26 @@ Start the web application in a second terminal:
 
     pnpm dev:web
 
-Open http://localhost:3000, edit the prefilled Express example, and select **Analyze source**. The browser sends the code to POST http://localhost:4000/analyze/source and displays the extracted routes.
+Open http://localhost:3000.
+
+### Paste source
+
+1. Keep **Paste source** selected.
+2. Edit the prefilled Express example.
+3. Select **Analyze source**.
+
+The browser calls POST http://localhost:4000/analyze/source and displays the extracted routes.
+
+### Upload project files
+
+1. Select **Upload project files**.
+2. Choose up to 100 .js, .jsx, .ts, or .tsx files.
+3. Review the selected paths and sizes. Remove individual files or use **Clear all** if needed.
+4. Select **Analyze project**.
+
+Selected files remain in browser memory and are not read or sent until you analyze. The browser reads their text locally, calls POST http://localhost:4000/analyze/project, and displays combined routes, skipped files, and file-level syntax errors.
+
+Use the HTTP method and search controls to filter the displayed routes without another API request. **Download JSON** saves the complete, unfiltered analysis as docpilot-analysis.json.
 
 The API health check remains available at GET http://localhost:4000/health.
 

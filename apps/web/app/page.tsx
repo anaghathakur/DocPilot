@@ -1,4 +1,4 @@
-import { SourceAnalyzer } from '../components/source-analyzer';
+import { AnalyzerPlayground } from '../components/analyzer-playground';
 
 export default function Home() {
   return (
@@ -12,16 +12,17 @@ export default function Home() {
             DocPilot
           </h1>
           <p className="mt-4 text-base leading-7 text-slate-600 sm:text-lg">
-            Paste Express route code and turn it into clear, structured API
-            route data.
+            Analyze pasted Express code or multiple project files and turn them
+            into clear, structured API route data.
           </p>
         </header>
 
-        <SourceAnalyzer />
+        <AnalyzerPlayground />
 
         <footer className="mt-8 text-sm text-slate-500">
-          Supports JavaScript and TypeScript routes declared on Express app and
-          router instances.
+          Files stay in your browser until you choose Analyze. Supports
+          JavaScript and TypeScript routes declared on Express app and router
+          instances.
         </footer>
       </div>
     </main>
