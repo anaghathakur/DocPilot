@@ -1,28 +1,32 @@
-# Dependencies
-node_modules/
-.pnpm-store/
-
-# Build output
-.next/
-dist/
-out/
-*.tsbuildinfo
-
-# Environment variables
+# Secrets and environment files
 .env
 .env.*
+**/.env
+**/.env.*
 !.env.example
+!**/.env.example
 
-# Logs
-*.log
-npm-debug.log*
-pnpm-debug.log*
-yarn-debug.log*
-yarn-error.log*
+# Keys and credentials
+*.pem
+*.key
+*.p12
+*.pfx
+credentials*.json
+service-account*.json
+secrets*.json
 
-# Editors and operating systems
-.idea/
+# Local AI/editor data
+.agents/
+.codex/
 .vscode/
-.DS_Store
-Thumbs.db
 
+# Dependencies and generated files
+node_modules/
+.next/
+dist/
+coverage/
+*.log
+*.zip
+*.tmp
+
+*.tsbuildinfo

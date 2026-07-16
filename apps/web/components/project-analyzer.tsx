@@ -3,6 +3,8 @@
 import { useMemo, useRef, useState } from 'react';
 import type { ChangeEvent, FormEvent } from 'react';
 
+import { OpenApiPanel } from './openapi-panel';
+
 import {
   analyzeProject,
   type AnalyzeProjectFile,
@@ -197,146 +199,151 @@ export function ProjectAnalyzer() {
   }
 
   return (
-    <div className="grid gap-6 lg:grid-cols-[minmax(20rem,0.78fr)_minmax(0,1.22fr)]">
-      <section
-        aria-labelledby="project-files-heading"
-        className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6"
-      >
-        <div>
-          <h2
-            id="project-files-heading"
-            className="text-lg font-semibold text-slate-950"
-          >
-            Project files
-          </h2>
-          <p className="mt-1 text-sm leading-6 text-slate-600">
-            Select up to 100 Express JavaScript or TypeScript files. Files are
-            read only when you analyze.
-          </p>
-        </div>
-
-        <form className="mt-5 space-y-5" onSubmit={handleAnalyze}>
+    <div className="space-y-6">
+      <div className="grid gap-6 lg:grid-cols-[minmax(20rem,0.78fr)_minmax(0,1.22fr)]">
+        <section
+          aria-labelledby="project-files-heading"
+          className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6"
+        >
           <div>
-            <label
-              htmlFor="project-files"
-              className="block text-sm font-medium text-slate-800"
+            <h2
+              id="project-files-heading"
+              className="text-lg font-semibold text-slate-950"
             >
-              Choose project files
-            </label>
-            <input
-              ref={fileInputRef}
-              id="project-files"
-              type="file"
-              multiple
-              accept=".js,.jsx,.ts,.tsx"
-              onChange={handleFileSelection}
-              aria-describedby="project-files-help"
-              className="mt-2 block w-full rounded-lg border border-slate-300 bg-white text-sm text-slate-600 file:mr-3 file:border-0 file:border-r file:border-slate-300 file:bg-slate-100 file:px-3 file:py-2.5 file:font-semibold file:text-slate-800 hover:file:bg-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-700"
-            />
-            <p
-              id="project-files-help"
-              className="mt-1.5 text-xs text-slate-500"
-            >
-              Selecting files does not send them to the API.
+              Project files
+            </h2>
+            <p className="mt-1 text-sm leading-6 text-slate-600">
+              Select up to 100 Express JavaScript or TypeScript files. Files are
+              read only when you analyze.
             </p>
           </div>
 
-          {selectionMessages.length > 0 ? (
-            <div
-              role="alert"
-              className="rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900"
-            >
-              <p className="font-medium">Some files were not added:</p>
-              <ul className="mt-1 list-disc space-y-1 pl-5">
-                {selectionMessages.map((message) => (
-                  <li key={message}>{message}</li>
-                ))}
-              </ul>
-            </div>
-          ) : null}
-
-          <div className="rounded-lg border border-slate-200">
-            <div className="flex items-center justify-between gap-3 border-b border-slate-200 px-4 py-3">
-              <p className="text-sm font-medium text-slate-800">
-                {selectedFiles.length === 1
-                  ? '1 file selected'
-                  : String(selectedFiles.length) + ' files selected'}
-              </p>
-              <button
-                type="button"
-                onClick={clearFiles}
-                disabled={selectedFiles.length === 0}
-                className="text-sm font-semibold text-slate-600 underline-offset-4 hover:text-slate-950 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-700 disabled:cursor-not-allowed disabled:text-slate-300"
+          <form className="mt-5 space-y-5" onSubmit={handleAnalyze}>
+            <div>
+              <label
+                htmlFor="project-files"
+                className="block text-sm font-medium text-slate-800"
               >
-                Clear all
-              </button>
-            </div>
-
-            {selectedFiles.length === 0 ? (
-              <p className="px-4 py-7 text-center text-sm text-slate-500">
-                No project files selected
+                Choose project files
+              </label>
+              <input
+                ref={fileInputRef}
+                id="project-files"
+                type="file"
+                multiple
+                accept=".js,.jsx,.ts,.tsx"
+                onChange={handleFileSelection}
+                aria-describedby="project-files-help"
+                className="mt-2 block w-full rounded-lg border border-slate-300 bg-white text-sm text-slate-600 file:mr-3 file:border-0 file:border-r file:border-slate-300 file:bg-slate-100 file:px-3 file:py-2.5 file:font-semibold file:text-slate-800 hover:file:bg-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-700"
+              />
+              <p
+                id="project-files-help"
+                className="mt-1.5 text-xs text-slate-500"
+              >
+                Selecting files does not send them to the API.
               </p>
-            ) : (
-              <ul className="max-h-72 divide-y divide-slate-200 overflow-y-auto">
-                {selectedFiles.map(({ file, filePath }) => (
-                  <li
-                    key={filePath}
-                    className="flex items-center justify-between gap-3 px-4 py-3"
-                  >
-                    <div className="min-w-0">
-                      <p
-                        className="truncate text-sm font-medium text-slate-800"
-                        title={filePath}
-                      >
-                        {filePath}
-                      </p>
-                      <p className="mt-0.5 text-xs text-slate-500">
-                        {formatFileSize(file.size)}
-                      </p>
-                    </div>
-                    <button
-                      type="button"
-                      onClick={() => removeFile(filePath)}
-                      aria-label={'Remove ' + filePath}
-                      className="shrink-0 rounded-md border border-slate-300 px-2.5 py-1.5 text-xs font-semibold text-slate-700 hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-700"
-                    >
-                      Remove
-                    </button>
-                  </li>
-                ))}
-              </ul>
-            )}
-          </div>
-
-          {requestError !== null ? (
-            <div
-              role="alert"
-              className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800"
-            >
-              {requestError}
             </div>
-          ) : null}
 
-          <button
-            type="submit"
-            disabled={isLoading || selectedFiles.length === 0}
-            className="inline-flex min-h-11 w-full items-center justify-center rounded-lg bg-blue-700 px-4 py-2.5 text-sm font-semibold text-white outline-none hover:bg-blue-800 focus-visible:ring-2 focus-visible:ring-blue-700 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:bg-blue-400 sm:w-auto"
-          >
-            {isLoading ? 'Analyzing project' : 'Analyze project'}
-          </button>
-        </form>
-      </section>
+            {selectionMessages.length > 0 ? (
+              <div
+                role="alert"
+                className="rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900"
+              >
+                <p className="font-medium">Some files were not added:</p>
+                <ul className="mt-1 list-disc space-y-1 pl-5">
+                  {selectionMessages.map((message) => (
+                    <li key={message}>{message}</li>
+                  ))}
+                </ul>
+              </div>
+            ) : null}
 
-      <ProjectResults
-        result={result}
-        filteredRoutes={filteredRoutes}
-        isLoading={isLoading}
-        methodFilter={methodFilter}
-        searchQuery={searchQuery}
-        onMethodFilterChange={setMethodFilter}
-        onSearchQueryChange={setSearchQuery}
-        onDownload={downloadResult}
-      />
+            <div className="rounded-lg border border-slate-200">
+              <div className="flex items-center justify-between gap-3 border-b border-slate-200 px-4 py-3">
+                <p className="text-sm font-medium text-slate-800">
+                  {selectedFiles.length === 1
+                    ? '1 file selected'
+                    : String(selectedFiles.length) + ' files selected'}
+                </p>
+                <button
+                  type="button"
+                  onClick={clearFiles}
+                  disabled={selectedFiles.length === 0}
+                  className="text-sm font-semibold text-slate-600 underline-offset-4 hover:text-slate-950 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-700 disabled:cursor-not-allowed disabled:text-slate-300"
+                >
+                  Clear all
+                </button>
+              </div>
+
+              {selectedFiles.length === 0 ? (
+                <p className="px-4 py-7 text-center text-sm text-slate-500">
+                  No project files selected
+                </p>
+              ) : (
+                <ul className="max-h-72 divide-y divide-slate-200 overflow-y-auto">
+                  {selectedFiles.map(({ file, filePath }) => (
+                    <li
+                      key={filePath}
+                      className="flex items-center justify-between gap-3 px-4 py-3"
+                    >
+                      <div className="min-w-0">
+                        <p
+                          className="truncate text-sm font-medium text-slate-800"
+                          title={filePath}
+                        >
+                          {filePath}
+                        </p>
+                        <p className="mt-0.5 text-xs text-slate-500">
+                          {formatFileSize(file.size)}
+                        </p>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => removeFile(filePath)}
+                        aria-label={'Remove ' + filePath}
+                        className="shrink-0 rounded-md border border-slate-300 px-2.5 py-1.5 text-xs font-semibold text-slate-700 hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-700"
+                      >
+                        Remove
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+
+            {requestError !== null ? (
+              <div
+                role="alert"
+                className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800"
+              >
+                {requestError}
+              </div>
+            ) : null}
+
+            <button
+              type="submit"
+              disabled={isLoading || selectedFiles.length === 0}
+              className="inline-flex min-h-11 w-full items-center justify-center rounded-lg bg-blue-700 px-4 py-2.5 text-sm font-semibold text-white outline-none hover:bg-blue-800 focus-visible:ring-2 focus-visible:ring-blue-700 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:bg-blue-400 sm:w-auto"
+            >
+              {isLoading ? 'Analyzing project' : 'Analyze project'}
+            </button>
+          </form>
+        </section>
+
+        <ProjectResults
+          result={result}
+          filteredRoutes={filteredRoutes}
+          isLoading={isLoading}
+          methodFilter={methodFilter}
+          searchQuery={searchQuery}
+          onMethodFilterChange={setMethodFilter}
+          onSearchQueryChange={setSearchQuery}
+          onDownload={downloadResult}
+        />
+      </div>
+      {result !== null ? (
+        <OpenApiPanel routes={result.routes} idPrefix="project" />
+      ) : null}
     </div>
   );
 }

@@ -11,6 +11,7 @@ The MVP does not include AI, authentication, private-repository access, persiste
       web/       Next.js Source and Project Analyzer Playground
     packages/
       parser/    AST-based Express route extraction library
+      openapi/   Framework-independent OpenAPI 3.1 generator
 
 The repository uses pnpm workspaces. TypeScript, ESLint, and Prettier configuration is shared from the workspace root.
 
@@ -107,6 +108,24 @@ GitHub analysis limitations:
 - Repository code, package installation, and repository scripts are never executed.
 
 All project-style results can be filtered by method or searched by path, handler, middleware, or file path without additional API requests. **Download JSON** saves the complete unfiltered response.
+
+### Generate OpenAPI documentation
+
+After any source, project-file, or GitHub analysis completes:
+
+1. Keep the extracted route results visible and review them.
+2. Edit the API title, version, and optional HTTP or HTTPS server URL.
+3. Select **Generate OpenAPI**.
+4. Review the endpoint overview and any duplicate or unsupported-path warnings.
+5. Switch between the JSON and YAML previews, copy either format, or download openapi.json and openapi.yaml.
+
+OpenAPI generation calls POST /generate/openapi with the structured route results. It does not parse source code or access the repository again.
+
+You can test the endpoint directly:
+
+    curl -X POST http://localhost:4000/generate/openapi -H "Content-Type: application/json" --data '{"routes":[{"method":"GET","path":"/users/:id","middleware":[],"handler":"getUserById"}],"title":"My API","version":"1.0.0"}'
+
+The generator emits OpenAPI 3.1.0 with path parameters, deterministic operation IDs, one generic successful response, and DocPilot handler, middleware, and file extensions. It does not invent request bodies, schemas, authentication, tags, examples, or additional status codes. Duplicate operations keep the first route and return warnings. Wildcards, regular-expression parameters, and optional or repeating path modifiers are skipped with distinct warnings rather than producing invalid OpenAPI.
 
 The API health check remains available at `GET http://localhost:4000/health`.
 

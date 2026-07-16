@@ -5,15 +5,16 @@
   "type": "module",
   "scripts": {
     "build": "tsc --project tsconfig.json",
-    "predev": "pnpm --filter @docpilot/parser build",
+    "predev": "pnpm --filter @docpilot/parser --filter @docpilot/openapi build",
     "dev": "tsx watch src/index.ts",
     "start": "node dist/index.js",
-    "pretest": "pnpm --filter @docpilot/parser build",
+    "pretest": "pnpm --filter @docpilot/parser --filter @docpilot/openapi build",
     "test": "vitest run",
-    "pretypecheck": "pnpm --filter @docpilot/parser build",
+    "pretypecheck": "pnpm --filter @docpilot/parser --filter @docpilot/openapi build",
     "typecheck": "tsc --project tsconfig.json --noEmit && tsc --project tsconfig.test.json --noEmit"
   },
   "dependencies": {
+    "@docpilot/openapi": "workspace:*",
     "@docpilot/parser": "workspace:*",
     "cors": "^2.8.6",
     "dotenv": "^17.4.2",

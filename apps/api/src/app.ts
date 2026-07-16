@@ -5,6 +5,7 @@ import type { ErrorRequestHandler } from 'express';
 import { createAnalyzeGitHub } from './analyze-github.js';
 import { analyzeProject } from './analyze-project.js';
 import { analyzeSource, sendError } from './analyze-source.js';
+import { generateOpenApiDocument } from './generate-openapi.js';
 import { createGitHubRepositoryAnalyzer } from './github-repository-analyzer.js';
 import type { GitHubRepositoryAnalyzer } from './github-repository-analyzer.js';
 
@@ -47,6 +48,7 @@ export function createApp(options: CreateAppOptions = {}) {
   app.post('/analyze/source', analyzeSource);
   app.post('/analyze/project', analyzeProject);
   app.post('/analyze/github', createAnalyzeGitHub(githubRepositoryAnalyzer));
+  app.post('/generate/openapi', generateOpenApiDocument);
 
   const errorHandler: ErrorRequestHandler = (
     error,
