@@ -15,7 +15,7 @@ const maximumFiles = 100;
 const supportedFileExtension = /\.(?:js|jsx|ts|tsx)$/i;
 const methodFilters = ['ALL', 'GET', 'POST', 'PUT', 'PATCH', 'DELETE'] as const;
 
-type MethodFilter = (typeof methodFilters)[number];
+export type MethodFilter = (typeof methodFilters)[number];
 
 interface SelectedProjectFile {
   file: File;
@@ -341,7 +341,7 @@ export function ProjectAnalyzer() {
   );
 }
 
-interface ProjectResultsProps {
+export interface ProjectResultsProps {
   result: AnalyzeProjectResponse | null;
   filteredRoutes: ProjectRoute[];
   isLoading: boolean;
@@ -350,9 +350,15 @@ interface ProjectResultsProps {
   onMethodFilterChange: (method: MethodFilter) => void;
   onSearchQueryChange: (query: string) => void;
   onDownload: () => void;
+  idPrefix?: string;
+  heading?: string;
+  description?: string;
+  loadingMessage?: string;
+  emptyTitle?: string;
+  emptyDescription?: string;
 }
 
-function ProjectResults({
+export function ProjectResults({
   result,
   filteredRoutes,
   isLoading,
@@ -361,6 +367,12 @@ function ProjectResults({
   onMethodFilterChange,
   onSearchQueryChange,
   onDownload,
+  idPrefix = 'project',
+  heading = 'Project results',
+  description = 'Combined routes and file-level analysis details.',
+  loadingMessage = 'Analyzing project files�',
+  emptyTitle = 'No project analysis yet',
+  emptyDescription = 'Select files and analyze them to see combined route details.',
 }: ProjectResultsProps) {
   const resultLabel =
     result === null
@@ -371,21 +383,19 @@ function ProjectResults({
 
   return (
     <section
-      aria-labelledby="project-results-heading"
+      aria-labelledby={idPrefix + '-results-heading'}
       aria-busy={isLoading}
       className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6"
     >
       <div className="flex flex-wrap items-start justify-between gap-4 border-b border-slate-200 pb-4">
         <div>
           <h2
-            id="project-results-heading"
+            id={idPrefix + '-results-heading'}
             className="text-lg font-semibold text-slate-950"
           >
-            Project results
+            {heading}
           </h2>
-          <p className="mt-1 text-sm text-slate-600">
-            Combined routes and file-level analysis details.
-          </p>
+          <p className="mt-1 text-sm text-slate-600">{description}</p>
         </div>
         <div className="flex flex-wrap items-center justify-end gap-2">
           <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-medium text-slate-700">
@@ -405,15 +415,11 @@ function ProjectResults({
 
       <div className="mt-5" aria-live="polite">
         {isLoading ? (
-          <p className="text-sm text-slate-600">Analyzing project files…</p>
+          <p className="text-sm text-slate-600">{loadingMessage}</p>
         ) : result === null ? (
           <div className="rounded-lg border border-dashed border-slate-300 bg-slate-50 px-5 py-8 text-center">
-            <p className="text-sm font-medium text-slate-700">
-              No project analysis yet
-            </p>
-            <p className="mt-1 text-sm text-slate-500">
-              Select files and analyze them to see combined route details.
-            </p>
+            <p className="text-sm font-medium text-slate-700">{emptyTitle}</p>
+            <p className="mt-1 text-sm text-slate-500">{emptyDescription}</p>
           </div>
         ) : (
           <div className="space-y-5">
@@ -465,13 +471,13 @@ function ProjectResults({
               <div className="grid gap-4 border-y border-slate-200 py-4 sm:grid-cols-[10rem_minmax(0,1fr)]">
                 <div>
                   <label
-                    htmlFor="method-filter"
+                    htmlFor={idPrefix + '-method-filter'}
                     className="block text-sm font-medium text-slate-800"
                   >
                     HTTP method
                   </label>
                   <select
-                    id="method-filter"
+                    id={idPrefix + '-method-filter'}
                     value={methodFilter}
                     onChange={(event) =>
                       onMethodFilterChange(event.target.value as MethodFilter)
@@ -487,13 +493,13 @@ function ProjectResults({
                 </div>
                 <div>
                   <label
-                    htmlFor="route-search"
+                    htmlFor={idPrefix + '-route-search'}
                     className="block text-sm font-medium text-slate-800"
                   >
                     Search routes
                   </label>
                   <input
-                    id="route-search"
+                    id={idPrefix + '-route-search'}
                     type="search"
                     value={searchQuery}
                     onChange={(event) =>

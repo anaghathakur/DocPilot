@@ -5,7 +5,21 @@ import {
 import type { NextFunction, Request, Response } from 'express';
 
 export type ApiErrorCode =
-  'INVALID_REQUEST' | 'INVALID_SOURCE_CODE' | 'INTERNAL_ERROR';
+  | 'INVALID_REQUEST'
+  | 'INVALID_SOURCE_CODE'
+  | 'INTERNAL_ERROR'
+  | 'INVALID_REPOSITORY_URL'
+  | 'REPOSITORY_NOT_ACCESSIBLE'
+  | 'PRIVATE_REPOSITORY'
+  | 'GITHUB_RATE_LIMITED'
+  | 'REPOSITORY_TOO_LARGE'
+  | 'GITHUB_TIMEOUT'
+  | 'GITHUB_UNAVAILABLE'
+  | 'INVALID_REPOSITORY_ARCHIVE';
+
+export interface ApiErrorMetadata {
+  rateLimitReset?: string;
+}
 
 interface AnalyzeSourceInput {
   sourceCode: string;
@@ -60,11 +74,15 @@ export function sendError(
   status: number,
   code: ApiErrorCode,
   message: string,
+  metadata: ApiErrorMetadata = {},
 ): void {
   response.status(status).json({
     error: {
       code,
       message,
+      ...(metadata.rateLimitReset === undefined
+        ? {}
+        : { rateLimitReset: metadata.rateLimitReset }),
     },
   });
 }

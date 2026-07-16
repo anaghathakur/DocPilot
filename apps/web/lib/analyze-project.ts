@@ -58,7 +58,7 @@ export function analyzeProject(
   );
 }
 
-function isAnalyzeProjectResponse(
+export function isAnalyzeProjectResponse(
   value: unknown,
 ): value is AnalyzeProjectResponse {
   return (

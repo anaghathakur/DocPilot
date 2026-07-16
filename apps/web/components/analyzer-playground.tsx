@@ -2,10 +2,11 @@
 
 import { useState } from 'react';
 
+import { GitHubAnalyzer } from './github-analyzer';
 import { ProjectAnalyzer } from './project-analyzer';
 import { SourceAnalyzer } from './source-analyzer';
 
-type AnalyzerMode = 'source' | 'project';
+type AnalyzerMode = 'source' | 'project' | 'github';
 
 export function AnalyzerPlayground() {
   const [mode, setMode] = useState<AnalyzerMode>('source');
@@ -14,7 +15,7 @@ export function AnalyzerPlayground() {
     <div>
       <fieldset className="mb-6 rounded-xl border border-slate-200 bg-white p-2 shadow-sm">
         <legend className="sr-only">Analysis mode</legend>
-        <div className="grid grid-cols-2 gap-2">
+        <div className="grid gap-2 sm:grid-cols-3">
           <ModeOption
             checked={mode === 'source'}
             label="Paste source"
@@ -27,6 +28,12 @@ export function AnalyzerPlayground() {
             value="project"
             onChange={setMode}
           />
+          <ModeOption
+            checked={mode === 'github'}
+            label="GitHub repository"
+            value="github"
+            onChange={setMode}
+          />
         </div>
       </fieldset>
 
@@ -35,6 +42,9 @@ export function AnalyzerPlayground() {
       </div>
       <div hidden={mode !== 'project'}>
         <ProjectAnalyzer />
+      </div>
+      <div hidden={mode !== 'github'}>
+        <GitHubAnalyzer />
       </div>
     </div>
   );

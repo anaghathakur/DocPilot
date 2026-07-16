@@ -1,8 +1,8 @@
 # DocPilot
 
-DocPilot analyzes Node.js and TypeScript Express source code and returns structured API route information. The playground supports both pasted source code and multiple browser-selected project files.
+DocPilot analyzes Node.js and TypeScript Express source code and returns structured API route information. The playground supports pasted source, browser-selected project files, and public GitHub repositories.
 
-The project does not include GitHub repository input, repository cloning, AI, authentication, persistence, or payments.
+The MVP does not include AI, authentication, private-repository access, persistence, or payments.
 
 ## Workspace structure
 
@@ -39,12 +39,20 @@ macOS or Linux:
 
 API variables:
 
-- PORT defaults to 4000.
-- WEB_ORIGIN defaults to http://localhost:3000 and controls the browser origin allowed by CORS.
+- `PORT` defaults to `4000`.
+- `WEB_ORIGIN` defaults to `http://localhost:3000` and is the only browser origin granted CORS access.
+- `GITHUB_METADATA_TIMEOUT_MS` defaults to 10 seconds.
+- `GITHUB_ARCHIVE_TIMEOUT_MS` defaults to 30 seconds.
+- `GITHUB_MAX_ARCHIVE_BYTES` defaults to 50 MiB compressed.
+- `GITHUB_MAX_FILE_BYTES` defaults to 512 KiB per supported source file.
+- `GITHUB_MAX_SOURCE_BYTES` defaults to 5 MiB across supported source files.
+- `GITHUB_MAX_ARCHIVE_ENTRIES` defaults to 10,000 ZIP entries.
+
+GitHub hosts and API versioning are fixed in server code rather than configurable download URLs. No GitHub token is required or accepted for this MVP.
 
 Web variables:
 
-- NEXT_PUBLIC_API_BASE_URL defaults to http://localhost:4000.
+- `NEXT_PUBLIC_API_BASE_URL` defaults to `http://localhost:4000`.
 
 Restart a development server after changing its environment file.
 
@@ -66,20 +74,56 @@ Open http://localhost:3000.
 2. Edit the prefilled Express example.
 3. Select **Analyze source**.
 
-The browser calls POST http://localhost:4000/analyze/source and displays the extracted routes.
+The browser calls `POST /analyze/source` and displays the extracted routes.
 
 ### Upload project files
 
 1. Select **Upload project files**.
-2. Choose up to 100 .js, .jsx, .ts, or .tsx files.
+2. Choose up to 100 `.js`, `.jsx`, `.ts`, or `.tsx` files.
 3. Review the selected paths and sizes. Remove individual files or use **Clear all** if needed.
 4. Select **Analyze project**.
 
-Selected files remain in browser memory and are not read or sent until you analyze. The browser reads their text locally, calls POST http://localhost:4000/analyze/project, and displays combined routes, skipped files, and file-level syntax errors.
+Selected files remain in browser memory and are not read or sent until you analyze. The browser reads their text locally, calls `POST /analyze/project`, and displays combined routes, skipped files, and file-level syntax errors.
 
-Use the HTTP method and search controls to filter the displayed routes without another API request. **Download JSON** saves the complete, unfiltered analysis as docpilot-analysis.json.
+### Analyze a public GitHub repository
 
-The API health check remains available at GET http://localhost:4000/health.
+1. Select **GitHub repository**.
+2. Enter a public repository URL such as `https://github.com/owner/repository`.
+3. Select **Analyze repository**.
+
+The API obtains the repository's default branch from GitHub, downloads its ZIP archive through official GitHub endpoints, and reuses the multi-file parser. The result shows the repository, default branch, analyzed and skipped files, partial file errors, and detected routes.
+
+You can also test the endpoint directly:
+
+    curl -X POST http://localhost:4000/analyze/github -H "Content-Type: application/json" --data '{"repositoryUrl":"https://github.com/owner/repository"}'
+
+GitHub analysis limitations:
+
+- Public `github.com` repositories only; private repositories and tokens are unsupported.
+- Anonymous GitHub API rate limits apply.
+- Only `.js`, `.jsx`, `.ts`, and `.tsx` source files are analyzed.
+- `node_modules`, `dist`, `build`, `coverage`, `.next`, `vendor`, declaration files, and minified files are ignored case-insensitively.
+- At most 100 supported files are allowed. Repositories exceeding the file, source-size, archive-size, or entry limits return a clear error instead of a partial arbitrary subset.
+- Repository code, package installation, and repository scripts are never executed.
+
+All project-style results can be filtered by method or searched by path, handler, middleware, or file path without additional API requests. **Download JSON** saves the complete unfiltered response.
+
+The API health check remains available at `GET http://localhost:4000/health`.
+
+## API errors for GitHub analysis
+
+`POST /analyze/github` uses stable public error codes:
+
+- `400 INVALID_REPOSITORY_URL`
+- `404 REPOSITORY_NOT_ACCESSIBLE`
+- `400 PRIVATE_REPOSITORY` when metadata explicitly identifies a private repository
+- `429 GITHUB_RATE_LIMITED`
+- `413 REPOSITORY_TOO_LARGE`
+- `504 GITHUB_TIMEOUT`
+- `502 GITHUB_UNAVAILABLE`
+- `502 INVALID_REPOSITORY_ARCHIVE`
+
+Anonymous GitHub 404 responses intentionally use the combined `REPOSITORY_NOT_ACCESSIBLE` error because GitHub may conceal private repositories as not found.
 
 ## Tests and quality checks
 
@@ -94,4 +138,4 @@ Run the shared quality checks:
     pnpm build
     pnpm format:check
 
-Use pnpm format to apply Prettier formatting.
+Use `pnpm format` to apply Prettier formatting.

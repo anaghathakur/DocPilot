@@ -2,13 +2,17 @@ import cors from 'cors';
 import express from 'express';
 import type { ErrorRequestHandler } from 'express';
 
+import { createAnalyzeGitHub } from './analyze-github.js';
 import { analyzeProject } from './analyze-project.js';
 import { analyzeSource, sendError } from './analyze-source.js';
+import { createGitHubRepositoryAnalyzer } from './github-repository-analyzer.js';
+import type { GitHubRepositoryAnalyzer } from './github-repository-analyzer.js';
 
 const defaultWebOrigin = 'http://localhost:3000';
 
 export interface CreateAppOptions {
   webOrigin?: string;
+  githubRepositoryAnalyzer?: GitHubRepositoryAnalyzer;
 }
 
 export function createApp(options: CreateAppOptions = {}) {
@@ -16,6 +20,8 @@ export function createApp(options: CreateAppOptions = {}) {
   const webOrigin = normalizeWebOrigin(
     options.webOrigin ?? process.env.WEB_ORIGIN,
   );
+  const githubRepositoryAnalyzer =
+    options.githubRepositoryAnalyzer ?? createGitHubRepositoryAnalyzer();
 
   app.use(
     cors({
@@ -40,6 +46,7 @@ export function createApp(options: CreateAppOptions = {}) {
 
   app.post('/analyze/source', analyzeSource);
   app.post('/analyze/project', analyzeProject);
+  app.post('/analyze/github', createAnalyzeGitHub(githubRepositoryAnalyzer));
 
   const errorHandler: ErrorRequestHandler = (
     error,
