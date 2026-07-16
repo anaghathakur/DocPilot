@@ -151,3 +151,211 @@ describe('CORS', () => {
     expect(response.headers).not.toHaveProperty('access-control-allow-origin');
   });
 });
+describe('POST /analyze/project', () => {
+  it('combines JavaScript and TypeScript routes and reports skipped files', async () => {
+    const response = await request(app)
+      .post('/analyze/project')
+      .send({
+        files: [
+          {
+            filePath: 'routes\\users.ts',
+            sourceCode: [
+              "router.get('/users', authMiddleware, getUsers);",
+              "router.post('/users', validateUser, createUser);",
+            ].join('\n'),
+          },
+          {
+            filePath: 'routes/products.js',
+            sourceCode:
+              "router.post('/products', validateProduct, createProduct);",
+          },
+          {
+            filePath: 'notes/routes.md',
+            sourceCode: "router.get('/ignored', ignoredHandler);",
+          },
+        ],
+      });
+
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual({
+      routes: [
+        {
+          method: 'GET',
+          path: '/users',
+          middleware: ['authMiddleware'],
+          handler: 'getUsers',
+          filePath: 'routes/users.ts',
+        },
+        {
+          method: 'POST',
+          path: '/users',
+          middleware: ['validateUser'],
+          handler: 'createUser',
+          filePath: 'routes/users.ts',
+        },
+        {
+          method: 'POST',
+          path: '/products',
+          middleware: ['validateProduct'],
+          handler: 'createProduct',
+          filePath: 'routes/products.js',
+        },
+      ],
+      routeCount: 3,
+      filesAnalyzed: 2,
+      filesSkipped: ['notes/routes.md'],
+      errors: [],
+    });
+  });
+
+  it('returns partial results when one supported file has invalid syntax', async () => {
+    const response = await request(app)
+      .post('/analyze/project')
+      .send({
+        files: [
+          {
+            filePath: 'routes\\broken.tsx',
+            sourceCode: "router.get('/broken', brokenHandler;",
+          },
+          {
+            filePath: 'routes/valid.jsx',
+            sourceCode: "router.get('/valid', validHandler);",
+          },
+        ],
+      });
+
+    expect(response.status).toBe(200);
+    expect(response.body.routes).toEqual([
+      {
+        method: 'GET',
+        path: '/valid',
+        middleware: [],
+        handler: 'validHandler',
+        filePath: 'routes/valid.jsx',
+      },
+    ]);
+    expect(response.body.routeCount).toBe(1);
+    expect(response.body.filesAnalyzed).toBe(2);
+    expect(response.body.filesSkipped).toEqual([]);
+    expect(response.body.errors).toHaveLength(1);
+    expect(response.body.errors[0]).toEqual({
+      filePath: 'routes/broken.tsx',
+      code: 'INVALID_SOURCE_CODE',
+      message: expect.stringContaining('Unable to parse source code'),
+    });
+    expect(response.body.errors[0]).not.toHaveProperty('stack');
+  });
+
+  it('rejects duplicate paths after separator normalization', async () => {
+    const response = await request(app)
+      .post('/analyze/project')
+      .send({
+        files: [
+          {
+            filePath: 'routes\\users.ts',
+            sourceCode: "router.get('/users', getUsers);",
+          },
+          {
+            filePath: 'routes/users.ts',
+            sourceCode: "router.post('/users', createUser);",
+          },
+        ],
+      });
+
+    expect(response.status).toBe(400);
+    expect(response.body).toEqual({
+      error: {
+        code: 'INVALID_REQUEST',
+        message: 'duplicate filePath: routes/users.ts',
+      },
+    });
+  });
+
+  it.each([
+    ['a missing files property', {}, 'files must be a non-empty array'],
+    [
+      'a non-array files property',
+      { files: {} },
+      'files must be a non-empty array',
+    ],
+    ['an empty files array', { files: [] }, 'files must be a non-empty array'],
+    [
+      'a non-object file',
+      { files: [null] },
+      'files[0].filePath must be a non-empty string',
+    ],
+    [
+      'an empty file path',
+      { files: [{ filePath: ' ', sourceCode: 'const value = 1;' }] },
+      'files[0].filePath must be a non-empty string',
+    ],
+    [
+      'empty source code',
+      { files: [{ filePath: 'routes.ts', sourceCode: ' ' }] },
+      'files[0].sourceCode must be a non-empty string',
+    ],
+  ])('rejects %s', async (_description, body, message) => {
+    const response = await request(app).post('/analyze/project').send(body);
+
+    expect(response.status).toBe(400);
+    expect(response.body).toEqual({
+      error: {
+        code: 'INVALID_REQUEST',
+        message,
+      },
+    });
+  });
+
+  it('accepts exactly 100 files', async () => {
+    const files = Array.from({ length: 100 }, (_value, index) => ({
+      filePath: 'notes/file-' + String(index) + '.md',
+      sourceCode: 'not parsed',
+    }));
+
+    const response = await request(app)
+      .post('/analyze/project')
+      .send({ files });
+
+    expect(response.status).toBe(200);
+    expect(response.body.routeCount).toBe(0);
+    expect(response.body.filesAnalyzed).toBe(0);
+    expect(response.body.filesSkipped).toHaveLength(100);
+    expect(response.body.errors).toEqual([]);
+  });
+
+  it('rejects requests containing more than 100 files', async () => {
+    const files = Array.from({ length: 101 }, (_value, index) => ({
+      filePath: 'routes/file-' + String(index) + '.ts',
+      sourceCode: "router.get('/route', handler);",
+    }));
+
+    const response = await request(app)
+      .post('/analyze/project')
+      .send({ files });
+
+    expect(response.status).toBe(400);
+    expect(response.body).toEqual({
+      error: {
+        code: 'INVALID_REQUEST',
+        message: 'files must contain no more than 100 items',
+      },
+    });
+  });
+
+  it('returns clean JSON for malformed request JSON', async () => {
+    const response = await request(app)
+      .post('/analyze/project')
+      .set('Content-Type', 'application/json')
+      .send('{"files":');
+
+    expect(response.status).toBe(400);
+    expect(response.headers['content-type']).toMatch(/application\/json/);
+    expect(response.body).toEqual({
+      error: {
+        code: 'INVALID_REQUEST',
+        message: 'Request body must contain valid JSON',
+      },
+    });
+    expect(response.body.error).not.toHaveProperty('stack');
+  });
+});

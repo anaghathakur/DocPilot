@@ -2,6 +2,7 @@ import cors from 'cors';
 import express from 'express';
 import type { ErrorRequestHandler } from 'express';
 
+import { analyzeProject } from './analyze-project.js';
 import { analyzeSource, sendError } from './analyze-source.js';
 
 const defaultWebOrigin = 'http://localhost:3000';
@@ -38,6 +39,7 @@ export function createApp(options: CreateAppOptions = {}) {
   });
 
   app.post('/analyze/source', analyzeSource);
+  app.post('/analyze/project', analyzeProject);
 
   const errorHandler: ErrorRequestHandler = (
     error,
