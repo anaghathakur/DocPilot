@@ -158,3 +158,12 @@ Run the shared quality checks:
     pnpm format:check
 
 Use `pnpm format` to apply Prettier formatting.
+
+
+## Live Demo
+
+Try DocPilot here: [Open DocPilot]https://doc-pilot-web.vercel.app/ ss
+
+Backend health check: [DocPilot API](https://docpilot-api-oou8.onrender.com/health)
+
+> The backend uses Render’s free tier, so the first request after inactivity may take around 30–60 seconds.
