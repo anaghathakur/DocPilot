@@ -144,16 +144,16 @@ export function OpenApiPanel({ routes, idPrefix }: OpenApiPanelProps) {
   return (
     <section
       aria-labelledby={idPrefix + '-openapi-heading'}
-      className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6"
+      className="rounded-2xl border border-slate-700/80 bg-[#0a1220] p-5 shadow-xl shadow-black/10 sm:p-6"
     >
-      <div className="border-b border-slate-200 pb-4">
+      <div className="border-b border-slate-700/80 pb-4">
         <h2
           id={idPrefix + '-openapi-heading'}
-          className="text-lg font-semibold text-slate-950"
+          className="text-lg font-semibold text-white"
         >
           OpenAPI documentation
         </h2>
-        <p className="mt-1 text-sm leading-6 text-slate-600">
+        <p className="mt-1 text-sm leading-6 text-slate-400">
           Generate an OpenAPI 3.1 document from the extracted routes. No source
           code is parsed again.
         </p>
@@ -166,7 +166,7 @@ export function OpenApiPanel({ routes, idPrefix }: OpenApiPanelProps) {
         <div>
           <label
             htmlFor={idPrefix + '-openapi-title'}
-            className="block text-sm font-medium text-slate-800"
+            className="block text-sm font-medium text-slate-200"
           >
             API title
           </label>
@@ -175,13 +175,13 @@ export function OpenApiPanel({ routes, idPrefix }: OpenApiPanelProps) {
             value={title}
             onChange={(event) => setTitle(event.target.value)}
             maxLength={200}
-            className="mt-2 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm text-slate-950 outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-600/20"
+            className="mt-2 w-full rounded-lg border border-slate-600 bg-slate-950/70 px-3 py-2.5 text-sm text-white outline-none focus:border-cyan-400 focus:ring-2 focus:ring-cyan-400/20"
           />
         </div>
         <div>
           <label
             htmlFor={idPrefix + '-openapi-version'}
-            className="block text-sm font-medium text-slate-800"
+            className="block text-sm font-medium text-slate-200"
           >
             API version
           </label>
@@ -190,16 +190,16 @@ export function OpenApiPanel({ routes, idPrefix }: OpenApiPanelProps) {
             value={version}
             onChange={(event) => setVersion(event.target.value)}
             maxLength={100}
-            className="mt-2 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm text-slate-950 outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-600/20"
+            className="mt-2 w-full rounded-lg border border-slate-600 bg-slate-950/70 px-3 py-2.5 text-sm text-white outline-none focus:border-cyan-400 focus:ring-2 focus:ring-cyan-400/20"
           />
         </div>
         <div>
           <label
             htmlFor={idPrefix + '-openapi-server'}
-            className="block text-sm font-medium text-slate-800"
+            className="block text-sm font-medium text-slate-200"
           >
             Server URL
-            <span className="ml-1 font-normal text-slate-500">(optional)</span>
+            <span className="ml-1 font-normal text-slate-400">(optional)</span>
           </label>
           <input
             id={idPrefix + '-openapi-server'}
@@ -208,20 +208,20 @@ export function OpenApiPanel({ routes, idPrefix }: OpenApiPanelProps) {
             onChange={(event) => setServerUrl(event.target.value)}
             placeholder="https://api.example.com"
             maxLength={2048}
-            className="mt-2 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm text-slate-950 outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-600/20"
+            className="mt-2 w-full rounded-lg border border-slate-600 bg-slate-950/70 px-3 py-2.5 text-sm text-white outline-none focus:border-cyan-400 focus:ring-2 focus:ring-cyan-400/20"
           />
         </div>
 
         <div className="md:col-span-3">
           {routes.length === 0 ? (
-            <p className="mb-3 text-sm text-amber-800">
+            <p className="mb-3 text-sm font-medium text-amber-200">
               No extracted routes are available for generation.
             </p>
           ) : null}
           {error !== null ? (
             <div
               role="alert"
-              className="mb-3 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800"
+              className="mb-3 rounded-lg border border-red-400/40 bg-red-950/60 px-4 py-3 text-sm text-red-100"
             >
               {error}
             </div>
@@ -229,7 +229,7 @@ export function OpenApiPanel({ routes, idPrefix }: OpenApiPanelProps) {
           <button
             type="submit"
             disabled={isLoading || routes.length === 0}
-            className="inline-flex min-h-11 items-center justify-center rounded-lg bg-blue-700 px-4 py-2.5 text-sm font-semibold text-white outline-none hover:bg-blue-800 focus-visible:ring-2 focus-visible:ring-blue-700 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:bg-blue-400"
+            className="inline-flex min-h-11 items-center justify-center rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white outline-none hover:bg-blue-500 focus-visible:ring-2 focus-visible:ring-cyan-400 focus-visible:ring-offset-2 focus-visible:ring-offset-[#0a1220] disabled:cursor-not-allowed disabled:bg-slate-700 disabled:text-slate-400"
           >
             {isLoading ? 'Generating OpenAPI' : 'Generate OpenAPI'}
           </button>
@@ -238,15 +238,15 @@ export function OpenApiPanel({ routes, idPrefix }: OpenApiPanelProps) {
 
       <div className="mt-6" aria-live="polite" aria-busy={isLoading}>
         {isLoading ? (
-          <p className="text-sm text-slate-600">
+          <p className="text-sm text-slate-400">
             Generating OpenAPI documentation�
           </p>
         ) : result === null ? (
-          <div className="rounded-lg border border-dashed border-slate-300 bg-slate-50 px-5 py-7 text-center">
-            <p className="text-sm font-medium text-slate-700">
+          <div className="rounded-xl border border-dashed border-slate-600 bg-slate-900/60 px-5 py-7 text-center">
+            <p className="text-sm font-medium text-slate-300">
               No OpenAPI document generated
             </p>
-            <p className="mt-1 text-sm text-slate-500">
+            <p className="mt-1 text-sm text-slate-400">
               Review the metadata and select Generate OpenAPI.
             </p>
           </div>
@@ -265,15 +265,15 @@ export function OpenApiPanel({ routes, idPrefix }: OpenApiPanelProps) {
             </dl>
 
             {result.warnings.length > 0 ? (
-              <div className="rounded-lg border border-amber-200 bg-amber-50 px-4 py-3">
-                <p className="text-sm font-semibold text-amber-950">
+              <div className="rounded-xl border border-amber-400/40 bg-amber-950/55 px-4 py-3">
+                <p className="text-sm font-semibold text-amber-100">
                   Generation warnings
                 </p>
                 <ul className="mt-2 space-y-2">
                   {result.warnings.map((warning, index) => (
                     <li
                       key={warning.code + '-' + String(index)}
-                      className="text-sm text-amber-900"
+                      className="text-sm text-amber-100"
                     >
                       <span className="font-semibold">
                         {warning.code === 'DUPLICATE_OPERATION'
@@ -289,27 +289,30 @@ export function OpenApiPanel({ routes, idPrefix }: OpenApiPanelProps) {
             ) : null}
 
             <div>
-              <h3 className="text-sm font-semibold text-slate-900">
+              <h3 className="text-sm font-semibold text-slate-100">
                 Endpoint overview
               </h3>
               {operations.length === 0 ? (
-                <p className="mt-2 text-sm text-slate-600">
+                <p className="mt-2 text-sm text-slate-400">
                   No routes could be represented safely in OpenAPI.
                 </p>
               ) : (
-                <ul className="mt-2 divide-y divide-slate-200 rounded-lg border border-slate-200">
+                <ul className="mt-2 divide-y divide-slate-700/80 overflow-hidden rounded-xl border border-slate-700/80 bg-slate-950/30">
                   {operations.map((operation) => (
                     <li
                       key={operation.method + '-' + operation.path}
                       className="grid gap-1 px-4 py-3 sm:grid-cols-[5rem_minmax(0,1fr)_minmax(8rem,0.7fr)] sm:items-center sm:gap-3"
                     >
-                      <span className="text-xs font-bold text-blue-700">
+                      <span className="w-fit rounded-md bg-blue-400/15 px-2 py-1 text-xs font-bold text-blue-200">
                         {operation.method}
                       </span>
-                      <code className="break-all text-sm font-semibold text-slate-900">
+                      <code className="break-all text-sm font-semibold text-slate-100">
                         {operation.path}
                       </code>
-                      <span className="truncate text-sm text-slate-600">
+                      <span
+                        title={operation.summary}
+                        className="truncate text-sm text-slate-400"
+                      >
                         {operation.summary}
                       </span>
                     </li>
@@ -321,18 +324,18 @@ export function OpenApiPanel({ routes, idPrefix }: OpenApiPanelProps) {
             <div>
               <div className="flex flex-wrap items-end justify-between gap-3">
                 <fieldset>
-                  <legend className="text-sm font-semibold text-slate-900">
+                  <legend className="text-sm font-semibold text-slate-100">
                     Preview format
                   </legend>
-                  <div className="mt-2 inline-flex rounded-lg border border-slate-300 p-1">
+                  <div className="mt-2 inline-flex rounded-xl border border-slate-600 bg-slate-950/60 p-1">
                     {(['json', 'yaml'] as const).map((format) => (
                       <label
                         key={format}
                         className={
-                          'cursor-pointer rounded-md px-3 py-1.5 text-sm font-semibold focus-within:ring-2 focus-within:ring-blue-700 ' +
+                          'cursor-pointer rounded-md px-3 py-1.5 text-sm font-semibold focus-within:ring-2 focus-within:ring-cyan-400 focus-within:ring-offset-2 focus-within:ring-offset-[#0a1220] ' +
                           (previewFormat === format
-                            ? 'bg-blue-700 text-white'
-                            : 'text-slate-700')
+                            ? 'bg-blue-500/20 text-blue-100'
+                            : 'text-slate-300')
                         }
                       >
                         <input
@@ -372,12 +375,12 @@ export function OpenApiPanel({ routes, idPrefix }: OpenApiPanelProps) {
                     ? 'OpenAPI JSON preview'
                     : 'OpenAPI YAML preview'
                 }
-                className="mt-3 max-h-[32rem] overflow-auto rounded-lg bg-slate-950 p-4 text-xs leading-5 text-slate-100"
+                className="mt-3 max-h-[34rem] overflow-auto rounded-xl border border-slate-700 bg-[#040812] p-4 shadow-inner text-xs leading-5 text-slate-100"
               >
                 <code>{preview}</code>
               </pre>
               <p
-                className="mt-2 min-h-5 text-sm text-slate-600"
+                className="mt-2 min-h-5 text-sm text-slate-400"
                 aria-live="polite"
               >
                 {actionFeedback}
@@ -392,9 +395,9 @@ export function OpenApiPanel({ routes, idPrefix }: OpenApiPanelProps) {
 
 function SummaryValue({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-lg bg-slate-50 px-3 py-3">
-      <dt className="text-xs font-medium text-slate-500">{label}</dt>
-      <dd className="mt-1 text-xl font-semibold text-slate-950">{value}</dd>
+    <div className="rounded-xl border border-slate-700/70 bg-slate-950/45 px-3 py-3">
+      <dt className="text-xs font-medium text-slate-400">{label}</dt>
+      <dd className="mt-1 text-xl font-semibold text-white">{value}</dd>
     </div>
   );
 }
@@ -410,7 +413,7 @@ function ActionButton({
     <button
       type="button"
       onClick={onClick}
-      className="rounded-md border border-slate-300 px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-700"
+      className="inline-flex min-h-10 items-center rounded-lg border border-slate-600 bg-slate-900/50 px-3 py-2 text-xs font-semibold text-slate-200 transition-colors hover:border-slate-500 hover:bg-slate-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400 focus-visible:ring-offset-2 focus-visible:ring-offset-[#0a1220]"
     >
       {children}
     </button>

@@ -21,11 +21,11 @@ const exampleSource = [
 ].join('\n');
 
 const methodStyles: Record<ExpressHttpMethod, string> = {
-  GET: 'bg-emerald-50 text-emerald-700 ring-emerald-600/20',
-  POST: 'bg-blue-50 text-blue-700 ring-blue-600/20',
-  PUT: 'bg-amber-50 text-amber-700 ring-amber-600/20',
-  PATCH: 'bg-violet-50 text-violet-700 ring-violet-600/20',
-  DELETE: 'bg-rose-50 text-rose-700 ring-rose-600/20',
+  GET: 'bg-cyan-400/10 text-cyan-200 ring-cyan-400/30',
+  POST: 'bg-blue-400/15 text-blue-200 ring-blue-400/30',
+  PUT: 'bg-amber-400/10 text-amber-200 ring-amber-400/30',
+  PATCH: 'bg-amber-400/10 text-amber-200 ring-amber-400/30',
+  DELETE: 'bg-red-400/10 text-red-200 ring-red-400/30',
 };
 
 export function SourceAnalyzer() {
@@ -81,16 +81,16 @@ export function SourceAnalyzer() {
       <div className="grid gap-6 lg:grid-cols-[minmax(0,1.15fr)_minmax(22rem,0.85fr)]">
         <section
           aria-labelledby="source-heading"
-          className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6"
+          className="rounded-2xl border border-slate-700/80 bg-[#0a1220] p-5 shadow-xl shadow-black/10 sm:p-6"
         >
           <div className="mb-5">
             <h2
               id="source-heading"
-              className="text-lg font-semibold text-slate-950"
+              className="text-lg font-semibold text-white"
             >
               Express source
             </h2>
-            <p className="mt-1 text-sm leading-6 text-slate-600">
+            <p className="mt-1 text-sm leading-6 text-slate-400">
               Paste JavaScript or TypeScript that declares routes on an Express
               app or router.
             </p>
@@ -100,10 +100,10 @@ export function SourceAnalyzer() {
             <div>
               <label
                 htmlFor="filename"
-                className="block text-sm font-medium text-slate-800"
+                className="block text-sm font-medium text-slate-200"
               >
                 Filename
-                <span className="ml-1 font-normal text-slate-500">
+                <span className="ml-1 font-normal text-slate-400">
                   (optional)
                 </span>
               </label>
@@ -115,9 +115,9 @@ export function SourceAnalyzer() {
                 onChange={(event) => setFilename(event.target.value)}
                 aria-describedby="filename-help"
                 autoComplete="off"
-                className="mt-2 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-950 outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-600/20"
+                className="mt-2 w-full rounded-lg border border-slate-600 bg-slate-950/70 px-3 py-2.5 text-sm text-white outline-none focus:border-cyan-400 focus:ring-2 focus:ring-cyan-400/20"
               />
-              <p id="filename-help" className="mt-1.5 text-xs text-slate-500">
+              <p id="filename-help" className="mt-1.5 text-xs text-slate-400">
                 Used to determine whether the source is JavaScript or
                 TypeScript.
               </p>
@@ -126,7 +126,7 @@ export function SourceAnalyzer() {
             <div>
               <label
                 htmlFor="source-code"
-                className="block text-sm font-medium text-slate-800"
+                className="block text-sm font-medium text-slate-200"
               >
                 Source code
               </label>
@@ -138,9 +138,9 @@ export function SourceAnalyzer() {
                 aria-describedby="source-help"
                 rows={18}
                 spellCheck={false}
-                className="mt-2 w-full resize-y rounded-lg border border-slate-300 bg-slate-950 px-4 py-3 font-mono text-sm leading-6 text-slate-100 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/30"
+                className="mt-2 w-full resize-y rounded-lg border border-slate-600 bg-slate-950 px-4 py-3 font-mono text-sm leading-6 text-slate-100 outline-none focus:border-cyan-400 focus:ring-2 focus:ring-cyan-400/25"
               />
-              <p id="source-help" className="mt-1.5 text-xs text-slate-500">
+              <p id="source-help" className="mt-1.5 text-xs text-slate-400">
                 String-literal paths on app or router methods are supported.
               </p>
             </div>
@@ -148,7 +148,7 @@ export function SourceAnalyzer() {
             {error !== null ? (
               <div
                 role="alert"
-                className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800"
+                className="rounded-lg border border-red-400/40 bg-red-950/60 px-4 py-3 text-sm text-red-100"
               >
                 {error}
               </div>
@@ -157,7 +157,7 @@ export function SourceAnalyzer() {
             <button
               type="submit"
               disabled={isLoading}
-              className="inline-flex min-h-11 w-full items-center justify-center rounded-lg bg-blue-700 px-4 py-2.5 text-sm font-semibold text-white outline-none hover:bg-blue-800 focus-visible:ring-2 focus-visible:ring-blue-700 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:bg-blue-400 sm:w-auto"
+              className="inline-flex min-h-11 w-full items-center justify-center rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white outline-none hover:bg-blue-500 focus-visible:ring-2 focus-visible:ring-cyan-400 focus-visible:ring-offset-2 focus-visible:ring-offset-[#0a1220] disabled:cursor-not-allowed disabled:bg-slate-700 disabled:text-slate-400 sm:w-auto"
             >
               {isLoading ? 'Analyzing source' : 'Analyze source'}
             </button>
@@ -167,43 +167,43 @@ export function SourceAnalyzer() {
         <section
           aria-labelledby="results-heading"
           aria-busy={isLoading}
-          className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6"
+          className="rounded-2xl border border-slate-700/80 bg-[#0a1220] p-5 shadow-xl shadow-black/10 sm:p-6"
         >
-          <div className="flex items-start justify-between gap-4 border-b border-slate-200 pb-4">
+          <div className="flex items-start justify-between gap-4 border-b border-slate-700/80 pb-4">
             <div>
               <h2
                 id="results-heading"
-                className="text-lg font-semibold text-slate-950"
+                className="text-lg font-semibold text-white"
               >
                 Extracted routes
               </h2>
-              <p className="mt-1 text-sm text-slate-600">
+              <p className="mt-1 text-sm text-slate-400">
                 Structured output from the Express parser.
               </p>
             </div>
-            <span className="shrink-0 rounded-full bg-slate-100 px-3 py-1 text-xs font-medium text-slate-700">
+            <span className="shrink-0 rounded-full bg-slate-800 px-3 py-1 text-xs font-medium text-slate-300">
               {resultLabel}
             </span>
           </div>
 
           <div className="mt-5" aria-live="polite">
             {isLoading ? (
-              <p className="text-sm text-slate-600">Analyzing source code…</p>
+              <p className="text-sm text-slate-400">Analyzing source code…</p>
             ) : result === null ? (
-              <div className="rounded-lg border border-dashed border-slate-300 bg-slate-50 px-5 py-8 text-center">
-                <p className="text-sm font-medium text-slate-700">
+              <div className="rounded-xl border border-dashed border-slate-600 bg-slate-900/60 px-5 py-8 text-center">
+                <p className="text-sm font-medium text-slate-300">
                   No analysis yet
                 </p>
-                <p className="mt-1 text-sm text-slate-500">
+                <p className="mt-1 text-sm text-slate-400">
                   Submit the example to see extracted route details.
                 </p>
               </div>
             ) : result.count === 0 ? (
-              <div className="rounded-lg border border-dashed border-slate-300 bg-slate-50 px-5 py-8 text-center">
-                <p className="text-sm font-medium text-slate-700">
+              <div className="rounded-xl border border-dashed border-slate-600 bg-slate-900/60 px-5 py-8 text-center">
+                <p className="text-sm font-medium text-slate-300">
                   No supported Express routes found
                 </p>
-                <p className="mt-1 text-sm text-slate-500">
+                <p className="mt-1 text-sm text-slate-400">
                   Check that route paths are string literals on app or router.
                 </p>
               </div>
@@ -212,7 +212,7 @@ export function SourceAnalyzer() {
                 {result.routes.map((route, index) => (
                   <li
                     key={route.method + '-' + route.path + '-' + String(index)}
-                    className="rounded-lg border border-slate-200 p-4"
+                    className="rounded-xl border border-slate-700/80 bg-slate-950/35 p-4"
                   >
                     <div className="flex flex-wrap items-center gap-3">
                       <span
@@ -223,25 +223,28 @@ export function SourceAnalyzer() {
                       >
                         {route.method}
                       </span>
-                      <code className="break-all text-sm font-semibold text-slate-950">
+                      <code className="break-all text-sm font-semibold text-white">
                         {route.path}
                       </code>
                     </div>
 
                     <dl className="mt-4 grid gap-3 text-sm">
                       <div>
-                        <dt className="font-medium text-slate-500">
+                        <dt className="font-medium text-slate-400">
                           Middleware
                         </dt>
-                        <dd className="mt-1 break-words font-mono text-slate-800">
+                        <dd className="mt-1 break-words font-mono text-slate-200">
                           {route.middleware.length > 0
                             ? route.middleware.join(', ')
                             : 'None'}
                         </dd>
                       </div>
                       <div>
-                        <dt className="font-medium text-slate-500">Handler</dt>
-                        <dd className="mt-1 break-words font-mono text-slate-800">
+                        <dt className="font-medium text-slate-400">Handler</dt>
+                        <dd
+                          title={route.handler}
+                          className="mt-1 line-clamp-2 break-all font-mono leading-6 text-slate-200"
+                        >
                           {route.handler}
                         </dd>
                       </div>

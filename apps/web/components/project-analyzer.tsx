@@ -25,11 +25,11 @@ interface SelectedProjectFile {
 }
 
 const methodStyles: Record<ExpressHttpMethod, string> = {
-  GET: 'bg-emerald-50 text-emerald-700 ring-emerald-600/20',
-  POST: 'bg-blue-50 text-blue-700 ring-blue-600/20',
-  PUT: 'bg-amber-50 text-amber-700 ring-amber-600/20',
-  PATCH: 'bg-violet-50 text-violet-700 ring-violet-600/20',
-  DELETE: 'bg-rose-50 text-rose-700 ring-rose-600/20',
+  GET: 'bg-cyan-400/10 text-cyan-200 ring-cyan-400/30',
+  POST: 'bg-blue-400/15 text-blue-200 ring-blue-400/30',
+  PUT: 'bg-amber-400/10 text-amber-200 ring-amber-400/30',
+  PATCH: 'bg-amber-400/10 text-amber-200 ring-amber-400/30',
+  DELETE: 'bg-red-400/10 text-red-200 ring-red-400/30',
 };
 
 export function ProjectAnalyzer() {
@@ -203,16 +203,16 @@ export function ProjectAnalyzer() {
       <div className="grid gap-6 lg:grid-cols-[minmax(20rem,0.78fr)_minmax(0,1.22fr)]">
         <section
           aria-labelledby="project-files-heading"
-          className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6"
+          className="rounded-2xl border border-slate-700/80 bg-[#0a1220] p-5 shadow-xl shadow-black/10 sm:p-6"
         >
           <div>
             <h2
               id="project-files-heading"
-              className="text-lg font-semibold text-slate-950"
+              className="text-lg font-semibold text-white"
             >
               Project files
             </h2>
-            <p className="mt-1 text-sm leading-6 text-slate-600">
+            <p className="mt-1 text-sm leading-6 text-slate-400">
               Select up to 100 Express JavaScript or TypeScript files. Files are
               read only when you analyze.
             </p>
@@ -222,7 +222,7 @@ export function ProjectAnalyzer() {
             <div>
               <label
                 htmlFor="project-files"
-                className="block text-sm font-medium text-slate-800"
+                className="block text-sm font-medium text-slate-200"
               >
                 Choose project files
               </label>
@@ -234,11 +234,11 @@ export function ProjectAnalyzer() {
                 accept=".js,.jsx,.ts,.tsx"
                 onChange={handleFileSelection}
                 aria-describedby="project-files-help"
-                className="mt-2 block w-full rounded-lg border border-slate-300 bg-white text-sm text-slate-600 file:mr-3 file:border-0 file:border-r file:border-slate-300 file:bg-slate-100 file:px-3 file:py-2.5 file:font-semibold file:text-slate-800 hover:file:bg-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-700"
+                className="mt-2 block w-full rounded-lg border border-slate-600 bg-slate-950/70 text-sm text-slate-300 file:mr-3 file:border-0 file:border-r file:border-slate-600 file:bg-slate-800 file:px-3 file:py-2.5 file:font-semibold file:text-slate-200 hover:file:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-cyan-400"
               />
               <p
                 id="project-files-help"
-                className="mt-1.5 text-xs text-slate-500"
+                className="mt-1.5 text-xs text-slate-400"
               >
                 Selecting files does not send them to the API.
               </p>
@@ -247,7 +247,7 @@ export function ProjectAnalyzer() {
             {selectionMessages.length > 0 ? (
               <div
                 role="alert"
-                className="rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900"
+                className="rounded-lg border border-amber-400/40 bg-amber-950/55 px-4 py-3 text-sm text-amber-100"
               >
                 <p className="font-medium">Some files were not added:</p>
                 <ul className="mt-1 list-disc space-y-1 pl-5">
@@ -258,9 +258,9 @@ export function ProjectAnalyzer() {
               </div>
             ) : null}
 
-            <div className="rounded-lg border border-slate-200">
-              <div className="flex items-center justify-between gap-3 border-b border-slate-200 px-4 py-3">
-                <p className="text-sm font-medium text-slate-800">
+            <div className="rounded-lg border border-slate-700/80">
+              <div className="flex items-center justify-between gap-3 border-b border-slate-700/80 px-4 py-3">
+                <p className="text-sm font-medium text-slate-200">
                   {selectedFiles.length === 1
                     ? '1 file selected'
                     : String(selectedFiles.length) + ' files selected'}
@@ -269,18 +269,18 @@ export function ProjectAnalyzer() {
                   type="button"
                   onClick={clearFiles}
                   disabled={selectedFiles.length === 0}
-                  className="text-sm font-semibold text-slate-600 underline-offset-4 hover:text-slate-950 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-700 disabled:cursor-not-allowed disabled:text-slate-300"
+                  className="text-sm font-semibold text-slate-400 underline-offset-4 hover:text-white hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400 disabled:cursor-not-allowed disabled:text-slate-600"
                 >
                   Clear all
                 </button>
               </div>
 
               {selectedFiles.length === 0 ? (
-                <p className="px-4 py-7 text-center text-sm text-slate-500">
+                <p className="px-4 py-7 text-center text-sm text-slate-400">
                   No project files selected
                 </p>
               ) : (
-                <ul className="max-h-72 divide-y divide-slate-200 overflow-y-auto">
+                <ul className="max-h-72 divide-y divide-slate-700/80 overflow-y-auto">
                   {selectedFiles.map(({ file, filePath }) => (
                     <li
                       key={filePath}
@@ -288,12 +288,12 @@ export function ProjectAnalyzer() {
                     >
                       <div className="min-w-0">
                         <p
-                          className="truncate text-sm font-medium text-slate-800"
+                          className="truncate text-sm font-medium text-slate-200"
                           title={filePath}
                         >
                           {filePath}
                         </p>
-                        <p className="mt-0.5 text-xs text-slate-500">
+                        <p className="mt-0.5 text-xs text-slate-400">
                           {formatFileSize(file.size)}
                         </p>
                       </div>
@@ -301,7 +301,7 @@ export function ProjectAnalyzer() {
                         type="button"
                         onClick={() => removeFile(filePath)}
                         aria-label={'Remove ' + filePath}
-                        className="shrink-0 rounded-md border border-slate-300 px-2.5 py-1.5 text-xs font-semibold text-slate-700 hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-700"
+                        className="shrink-0 rounded-md border border-slate-600 px-2.5 py-1.5 text-xs font-semibold text-slate-300 hover:bg-slate-900/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400"
                       >
                         Remove
                       </button>
@@ -314,7 +314,7 @@ export function ProjectAnalyzer() {
             {requestError !== null ? (
               <div
                 role="alert"
-                className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800"
+                className="rounded-lg border border-red-400/40 bg-red-950/60 px-4 py-3 text-sm text-red-100"
               >
                 {requestError}
               </div>
@@ -323,7 +323,7 @@ export function ProjectAnalyzer() {
             <button
               type="submit"
               disabled={isLoading || selectedFiles.length === 0}
-              className="inline-flex min-h-11 w-full items-center justify-center rounded-lg bg-blue-700 px-4 py-2.5 text-sm font-semibold text-white outline-none hover:bg-blue-800 focus-visible:ring-2 focus-visible:ring-blue-700 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:bg-blue-400 sm:w-auto"
+              className="inline-flex min-h-11 w-full items-center justify-center rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white outline-none hover:bg-blue-500 focus-visible:ring-2 focus-visible:ring-cyan-400 focus-visible:ring-offset-2 focus-visible:ring-offset-[#0a1220] disabled:cursor-not-allowed disabled:bg-slate-700 disabled:text-slate-400 sm:w-auto"
             >
               {isLoading ? 'Analyzing project' : 'Analyze project'}
             </button>
@@ -392,27 +392,27 @@ export function ProjectResults({
     <section
       aria-labelledby={idPrefix + '-results-heading'}
       aria-busy={isLoading}
-      className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6"
+      className="rounded-2xl border border-slate-700/80 bg-[#0a1220] p-5 shadow-xl shadow-black/10 sm:p-6"
     >
-      <div className="flex flex-wrap items-start justify-between gap-4 border-b border-slate-200 pb-4">
+      <div className="flex flex-wrap items-start justify-between gap-4 border-b border-slate-700/80 pb-4">
         <div>
           <h2
             id={idPrefix + '-results-heading'}
-            className="text-lg font-semibold text-slate-950"
+            className="text-lg font-semibold text-white"
           >
             {heading}
           </h2>
-          <p className="mt-1 text-sm text-slate-600">{description}</p>
+          <p className="mt-1 text-sm text-slate-400">{description}</p>
         </div>
         <div className="flex flex-wrap items-center justify-end gap-2">
-          <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-medium text-slate-700">
+          <span className="rounded-full bg-slate-800 px-3 py-1 text-xs font-medium text-slate-300">
             {resultLabel}
           </span>
           {result !== null ? (
             <button
               type="button"
               onClick={onDownload}
-              className="rounded-md border border-slate-300 px-3 py-1.5 text-xs font-semibold text-slate-700 hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-700"
+              className="inline-flex min-h-10 items-center rounded-lg border border-slate-600 px-3 py-2 text-xs font-semibold text-slate-300 hover:bg-slate-900/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400"
             >
               Download JSON
             </button>
@@ -422,11 +422,11 @@ export function ProjectResults({
 
       <div className="mt-5" aria-live="polite">
         {isLoading ? (
-          <p className="text-sm text-slate-600">{loadingMessage}</p>
+          <p className="text-sm text-slate-400">{loadingMessage}</p>
         ) : result === null ? (
-          <div className="rounded-lg border border-dashed border-slate-300 bg-slate-50 px-5 py-8 text-center">
-            <p className="text-sm font-medium text-slate-700">{emptyTitle}</p>
-            <p className="mt-1 text-sm text-slate-500">{emptyDescription}</p>
+          <div className="rounded-xl border border-dashed border-slate-600 bg-slate-900/60 px-5 py-8 text-center">
+            <p className="text-sm font-medium text-slate-300">{emptyTitle}</p>
+            <p className="mt-1 text-sm text-slate-400">{emptyDescription}</p>
           </div>
         ) : (
           <div className="space-y-5">
@@ -444,13 +444,13 @@ export function ProjectResults({
             </dl>
 
             {result.errors.length > 0 ? (
-              <div className="rounded-lg border border-amber-200 bg-amber-50 px-4 py-3">
-                <p className="text-sm font-semibold text-amber-950">
+              <div className="rounded-xl border border-amber-400/40 bg-amber-950/55 px-4 py-3">
+                <p className="text-sm font-semibold text-amber-100">
                   Analysis completed with file errors
                 </p>
                 <ul className="mt-2 space-y-2">
                   {result.errors.map((error) => (
-                    <li key={error.filePath} className="text-sm text-amber-900">
+                    <li key={error.filePath} className="text-sm text-amber-100">
                       <code className="font-semibold">{error.filePath}</code>
                       <span className="block mt-0.5">{error.message}</span>
                     </li>
@@ -460,11 +460,11 @@ export function ProjectResults({
             ) : null}
 
             {result.filesSkipped.length > 0 ? (
-              <div className="rounded-lg border border-slate-200 bg-slate-50 px-4 py-3">
-                <p className="text-sm font-semibold text-slate-800">
+              <div className="rounded-lg border border-slate-700/80 bg-slate-900/60 px-4 py-3">
+                <p className="text-sm font-semibold text-slate-200">
                   Skipped files
                 </p>
-                <ul className="mt-1 list-disc space-y-1 pl-5 text-sm text-slate-600">
+                <ul className="mt-1 list-disc space-y-1 pl-5 text-sm text-slate-400">
                   {result.filesSkipped.map((filePath) => (
                     <li key={filePath}>
                       <code>{filePath}</code>
@@ -475,11 +475,11 @@ export function ProjectResults({
             ) : null}
 
             {result.routeCount > 0 ? (
-              <div className="grid gap-4 border-y border-slate-200 py-4 sm:grid-cols-[10rem_minmax(0,1fr)]">
+              <div className="grid gap-4 border-y border-slate-700/80 py-4 sm:grid-cols-[10rem_minmax(0,1fr)]">
                 <div>
                   <label
                     htmlFor={idPrefix + '-method-filter'}
-                    className="block text-sm font-medium text-slate-800"
+                    className="block text-sm font-medium text-slate-200"
                   >
                     HTTP method
                   </label>
@@ -489,7 +489,7 @@ export function ProjectResults({
                     onChange={(event) =>
                       onMethodFilterChange(event.target.value as MethodFilter)
                     }
-                    className="mt-2 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-600/20"
+                    className="mt-2 w-full rounded-lg border border-slate-600 bg-slate-950/70 px-3 py-2.5 text-sm text-slate-100 outline-none focus:border-cyan-400 focus:ring-2 focus:ring-cyan-400/20"
                   >
                     {methodFilters.map((method) => (
                       <option key={method} value={method}>
@@ -501,7 +501,7 @@ export function ProjectResults({
                 <div>
                   <label
                     htmlFor={idPrefix + '-route-search'}
-                    className="block text-sm font-medium text-slate-800"
+                    className="block text-sm font-medium text-slate-200"
                   >
                     Search routes
                   </label>
@@ -513,34 +513,34 @@ export function ProjectResults({
                       onSearchQueryChange(event.target.value)
                     }
                     placeholder="Path, handler, middleware, or file"
-                    className="mt-2 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-600/20"
+                    className="mt-2 w-full rounded-lg border border-slate-600 bg-slate-950/70 px-3 py-2.5 text-sm text-slate-100 outline-none focus:border-cyan-400 focus:ring-2 focus:ring-cyan-400/20"
                   />
                 </div>
               </div>
             ) : null}
 
             {result.routeCount === 0 ? (
-              <div className="rounded-lg border border-dashed border-slate-300 bg-slate-50 px-5 py-8 text-center">
-                <p className="text-sm font-medium text-slate-700">
+              <div className="rounded-xl border border-dashed border-slate-600 bg-slate-900/60 px-5 py-8 text-center">
+                <p className="text-sm font-medium text-slate-300">
                   No supported Express routes found
                 </p>
-                <p className="mt-1 text-sm text-slate-500">
+                <p className="mt-1 text-sm text-slate-400">
                   The selected files were analyzed but contained no supported
                   routes.
                 </p>
               </div>
             ) : filteredRoutes.length === 0 ? (
-              <div className="rounded-lg border border-dashed border-slate-300 bg-slate-50 px-5 py-8 text-center">
-                <p className="text-sm font-medium text-slate-700">
+              <div className="rounded-xl border border-dashed border-slate-600 bg-slate-900/60 px-5 py-8 text-center">
+                <p className="text-sm font-medium text-slate-300">
                   No routes match your filters
                 </p>
-                <p className="mt-1 text-sm text-slate-500">
+                <p className="mt-1 text-sm text-slate-400">
                   Adjust the HTTP method or search query.
                 </p>
               </div>
             ) : (
               <div>
-                <p className="mb-3 text-xs font-medium text-slate-500">
+                <p className="mb-3 text-xs font-medium text-slate-400">
                   Showing {filteredRoutes.length} of {result.routeCount} routes
                 </p>
                 <ol className="space-y-4">
@@ -570,16 +570,16 @@ export function ProjectResults({
 
 function SummaryValue({ label, value }: { label: string; value: number }) {
   return (
-    <div className="rounded-lg bg-slate-50 px-3 py-3">
-      <dt className="text-xs font-medium text-slate-500">{label}</dt>
-      <dd className="mt-1 text-xl font-semibold text-slate-950">{value}</dd>
+    <div className="rounded-xl border border-slate-700/70 bg-slate-950/45 px-3 py-3">
+      <dt className="text-xs font-medium text-slate-400">{label}</dt>
+      <dd className="mt-1 text-xl font-semibold text-white">{value}</dd>
     </div>
   );
 }
 
 function ProjectRouteCard({ route }: { route: ProjectRoute }) {
   return (
-    <li className="rounded-lg border border-slate-200 p-4">
+    <li className="rounded-xl border border-slate-700/80 bg-slate-950/35 p-4">
       <div className="flex flex-wrap items-center gap-3">
         <span
           className={
@@ -589,27 +589,30 @@ function ProjectRouteCard({ route }: { route: ProjectRoute }) {
         >
           {route.method}
         </span>
-        <code className="break-all text-sm font-semibold text-slate-950">
+        <code className="break-all text-sm font-semibold text-white">
           {route.path}
         </code>
       </div>
 
       <dl className="mt-4 grid gap-3 text-sm sm:grid-cols-2">
         <div>
-          <dt className="font-medium text-slate-500">Middleware</dt>
-          <dd className="mt-1 break-words font-mono text-slate-800">
+          <dt className="font-medium text-slate-400">Middleware</dt>
+          <dd className="mt-1 break-words font-mono text-slate-200">
             {route.middleware.length > 0 ? route.middleware.join(', ') : 'None'}
           </dd>
         </div>
         <div>
-          <dt className="font-medium text-slate-500">Handler</dt>
-          <dd className="mt-1 break-words font-mono text-slate-800">
+          <dt className="font-medium text-slate-400">Handler</dt>
+          <dd
+            title={route.handler}
+            className="mt-1 line-clamp-2 break-all font-mono leading-6 text-slate-200"
+          >
             {route.handler}
           </dd>
         </div>
         <div className="sm:col-span-2">
-          <dt className="font-medium text-slate-500">File</dt>
-          <dd className="mt-1 break-all font-mono text-slate-800">
+          <dt className="font-medium text-slate-400">File</dt>
+          <dd className="mt-1 break-all font-mono text-slate-200">
             {route.filePath}
           </dd>
         </div>

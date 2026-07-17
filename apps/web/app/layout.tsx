@@ -1,21 +1,21 @@
 import type { Metadata } from 'next';
-import type { ReactNode } from 'react';
 
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: 'DocPilot Source Analyzer',
-  description: 'Extract structured API route data from Express source code.',
+  title: 'DocPilot — Express API Documentation Generator',
+  description:
+    'Analyze Express source code and public GitHub repositories, then generate OpenAPI 3.1 documentation.',
 };
 
-type RootLayoutProps = Readonly<{
-  children: ReactNode;
-}>;
-
-export default function RootLayout({ children }: RootLayoutProps) {
+export default function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body className="antialiased">{children}</body>
     </html>
   );
 }

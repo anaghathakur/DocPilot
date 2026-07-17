@@ -108,15 +108,15 @@ export function GitHubAnalyzer() {
       <div className="grid gap-6 lg:grid-cols-[minmax(20rem,0.78fr)_minmax(0,1.22fr)]">
         <section
           aria-labelledby="github-repository-heading"
-          className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6"
+          className="rounded-2xl border border-slate-700/80 bg-[#0a1220] p-5 shadow-xl shadow-black/10 sm:p-6"
         >
           <h2
             id="github-repository-heading"
-            className="text-lg font-semibold text-slate-950"
+            className="text-lg font-semibold text-white"
           >
             Public GitHub repository
           </h2>
-          <p className="mt-1 text-sm leading-6 text-slate-600">
+          <p className="mt-1 text-sm leading-6 text-slate-400">
             Analyze supported Express source files from a public github.com
             repository. Repository code is never executed.
           </p>
@@ -125,7 +125,7 @@ export function GitHubAnalyzer() {
             <div>
               <label
                 htmlFor="github-repository-url"
-                className="block text-sm font-medium text-slate-800"
+                className="block text-sm font-medium text-slate-200"
               >
                 Repository URL
               </label>
@@ -138,11 +138,11 @@ export function GitHubAnalyzer() {
                 autoComplete="url"
                 spellCheck={false}
                 aria-describedby="github-repository-help"
-                className="mt-2 w-full rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-sm text-slate-950 outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-600/20"
+                className="mt-2 w-full rounded-lg border border-slate-600 bg-slate-950/70 px-3 py-2.5 text-sm text-white outline-none focus:border-cyan-400 focus:ring-2 focus:ring-cyan-400/20"
               />
               <p
                 id="github-repository-help"
-                className="mt-1.5 text-xs leading-5 text-slate-500"
+                className="mt-1.5 text-xs leading-5 text-slate-400"
               >
                 Public repositories only. Private repositories and GitHub tokens
                 are not supported.
@@ -152,7 +152,7 @@ export function GitHubAnalyzer() {
             {requestError !== null ? (
               <div
                 role="alert"
-                className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800"
+                className="rounded-lg border border-red-400/40 bg-red-950/60 px-4 py-3 text-sm text-red-100"
               >
                 {requestError}
               </div>
@@ -161,7 +161,7 @@ export function GitHubAnalyzer() {
             <button
               type="submit"
               disabled={isLoading}
-              className="inline-flex min-h-11 w-full items-center justify-center rounded-lg bg-blue-700 px-4 py-2.5 text-sm font-semibold text-white outline-none hover:bg-blue-800 focus-visible:ring-2 focus-visible:ring-blue-700 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:bg-blue-400 sm:w-auto"
+              className="inline-flex min-h-11 w-full items-center justify-center rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white outline-none hover:bg-blue-500 focus-visible:ring-2 focus-visible:ring-cyan-400 focus-visible:ring-offset-2 focus-visible:ring-offset-[#0a1220] disabled:cursor-not-allowed disabled:bg-slate-700 disabled:text-slate-400 sm:w-auto"
             >
               {isLoading ? 'Analyzing repository' : 'Analyze repository'}
             </button>
@@ -172,7 +172,7 @@ export function GitHubAnalyzer() {
           {result !== null ? (
             <section
               aria-label="Repository details"
-              className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm"
+              className="rounded-2xl border border-slate-700/80 bg-[#0a1220] p-4 shadow-xl shadow-black/10"
             >
               <dl className="grid gap-3 sm:grid-cols-3">
                 <RepositoryValue
@@ -219,9 +219,9 @@ export function GitHubAnalyzer() {
 function RepositoryValue({ label, value }: { label: string; value: string }) {
   return (
     <div className="min-w-0">
-      <dt className="text-xs font-medium text-slate-500">{label}</dt>
+      <dt className="text-xs font-medium text-slate-400">{label}</dt>
       <dd
-        className="mt-1 truncate text-sm font-semibold text-slate-900"
+        className="mt-1 truncate text-sm font-semibold text-slate-100"
         title={value}
       >
         {value}
